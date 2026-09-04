@@ -16,7 +16,11 @@ import {
   Wind,
   Sun,
   Eye,
-  Check
+  Check,
+  X,
+  ZoomIn,
+  MessageSquare,
+  Phone
 } from 'lucide-react';
 import { 
   VASTU_FLOOR_PLANS, 
@@ -24,6 +28,7 @@ import {
   VastuFloorPlan, 
   VastuDirectionGuide 
 } from '../data/vastuFloorPlansData';
+import { BRAND_CONFIG } from '../data/architecturalData';
 
 interface VastuFloorPlansProps {
   onSelectPlan: (planTitle: string) => void;
@@ -34,6 +39,7 @@ export const VastuFloorPlans: React.FC<VastuFloorPlansProps> = ({ onSelectPlan }
   const [selectedPlan, setSelectedPlan] = useState<VastuFloorPlan>(VASTU_FLOOR_PLANS[0]);
   const [activeDirectionCode, setActiveDirectionCode] = useState<string>('NE');
   const [showDirectionGuide, setShowDirectionGuide] = useState<boolean>(false);
+  const [previewModalPlan, setPreviewModalPlan] = useState<VastuFloorPlan | null>(null);
 
   const filteredPlans = activeTab === 'all' 
     ? VASTU_FLOOR_PLANS 
@@ -295,6 +301,41 @@ export const VastuFloorPlans: React.FC<VastuFloorPlansProps> = ({ onSelectPlan }
                     {plan.overview}
                   </p>
 
+                  {/* Visual 2D Plan Thumbnail Banner */}
+                  <div 
+                    className="mt-3 relative rounded-xl overflow-hidden border border-pink-200 bg-slate-900 group/img cursor-pointer h-40"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedPlan(plan);
+                      setPreviewModalPlan(plan);
+                    }}
+                  >
+                    <img
+                      src={plan.blueprintImage}
+                      alt={`${plan.title} 2D CAD floor plan`}
+                      className="w-full h-full object-cover object-center group-hover/img:scale-105 transition-transform duration-500 opacity-90 group-hover/img:opacity-100"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-900/20 to-transparent" />
+                    
+                    <div className="absolute top-2.5 left-2.5 px-2 py-0.5 rounded bg-white/90 backdrop-blur-xs text-[10px] font-mono font-bold text-slate-900">
+                      CAD DWG 2D
+                    </div>
+
+                    <div className="absolute top-2.5 right-2.5 px-2 py-0.5 rounded bg-pink-600 text-white text-[10px] font-bold">
+                      {plan.orientation}
+                    </div>
+
+                    <div className="absolute bottom-2.5 left-3 right-3 flex items-center justify-between text-white text-xs">
+                      <span className="font-montserrat font-semibold text-[11px] truncate pr-2">
+                        {plan.dimensions} • {plan.builtUpAreaSqFt} Sq Ft
+                      </span>
+                      <span className="inline-flex items-center gap-1 text-[10px] font-bold text-pink-300 group-hover/img:text-pink-200 bg-black/40 px-2 py-0.5 rounded backdrop-blur-xs">
+                        <ZoomIn className="w-3 h-3" /> Click to Enlarge
+                      </span>
+                    </div>
+                  </div>
+
                   {/* Vastu Key Bullets */}
                   <div className="mt-4 pt-3 border-t border-pink-100/80">
                     <div className="text-[11px] font-bold uppercase tracking-wider text-pink-600 mb-2 flex items-center gap-1">
@@ -316,11 +357,12 @@ export const VastuFloorPlans: React.FC<VastuFloorPlansProps> = ({ onSelectPlan }
                       onClick={(e) => {
                         e.stopPropagation();
                         setSelectedPlan(plan);
+                        setPreviewModalPlan(plan);
                       }}
-                      className="text-xs font-bold text-pink-600 hover:text-pink-700 flex items-center gap-1"
+                      className="text-xs font-bold text-pink-600 hover:text-pink-700 flex items-center gap-1 cursor-pointer"
                     >
-                      <Eye className="w-3.5 h-3.5" />
-                      <span>Inspect CAD Breakdown</span>
+                      <ZoomIn className="w-3.5 h-3.5" />
+                      <span>View Full 2D Blueprint</span>
                     </button>
 
                     <button
@@ -359,28 +401,37 @@ export const VastuFloorPlans: React.FC<VastuFloorPlansProps> = ({ onSelectPlan }
               </div>
 
               {/* Visual CAD Blueprint Schematic Graphic */}
-              <div className="mt-4 relative rounded-xl overflow-hidden border border-pink-200 bg-pink-50/50">
-                <div className="h-56 w-full relative overflow-hidden">
+              <div 
+                className="mt-4 relative rounded-xl overflow-hidden border border-pink-200 bg-pink-50/50 group cursor-pointer"
+                onClick={() => setPreviewModalPlan(selectedPlan)}
+              >
+                <div className="h-60 w-full relative overflow-hidden">
                   <img
                     src={selectedPlan.blueprintImage}
                     alt={`${selectedPlan.title} 2D AutoCAD blueprint as per Vastu`}
-                    className="w-full h-full object-cover object-center"
+                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
                     loading="lazy"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/30 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/85 via-slate-900/30 to-transparent" />
                   
                   {/* Watermark Blueprint Overlay Badges */}
                   <div className="absolute top-3 left-3 px-2.5 py-1 rounded bg-white/90 backdrop-blur-xs border border-pink-200 text-[10px] font-mono text-slate-800 font-bold">
                     ORIENTATION: {selectedPlan.orientation.toUpperCase()}
                   </div>
 
-                  <div className="absolute top-3 right-3 px-2.5 py-1 rounded bg-pink-600 text-white text-[10px] font-bold font-montserrat uppercase">
-                    100% Vastu Aligned
+                  <div className="absolute top-3 right-3 px-2.5 py-1 rounded bg-pink-600 text-white text-[10px] font-bold font-montserrat uppercase flex items-center gap-1 shadow-sm">
+                    <ZoomIn className="w-3 h-3" />
+                    <span>Click to Zoom</span>
                   </div>
 
-                  <div className="absolute bottom-3 left-3 right-3 text-white text-xs">
-                    <div className="font-bold font-montserrat text-sm">{selectedPlan.dimensions} • {selectedPlan.builtUpAreaSqFt} SQ FT</div>
-                    <div className="text-[11px] text-pink-200 font-mono">AutoCAD DWG + PDF Sanction Set</div>
+                  <div className="absolute bottom-3 left-3 right-3 text-white text-xs flex items-end justify-between">
+                    <div>
+                      <div className="font-bold font-montserrat text-sm">{selectedPlan.dimensions} • {selectedPlan.builtUpAreaSqFt} SQ FT</div>
+                      <div className="text-[11px] text-pink-200 font-mono">AutoCAD DWG + PDF Sanction Set</div>
+                    </div>
+                    <span className="text-[10px] bg-white/20 hover:bg-white/30 backdrop-blur-xs text-white px-2.5 py-1 rounded font-semibold transition-colors">
+                      Full CAD Sheet
+                    </span>
                   </div>
                 </div>
               </div>
@@ -470,6 +521,168 @@ export const VastuFloorPlans: React.FC<VastuFloorPlansProps> = ({ onSelectPlan }
         </div>
 
       </div>
+
+      {/* High-Resolution 2D Blueprint Modal */}
+      {previewModalPlan && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-slate-950/80 backdrop-blur-sm animate-fadeIn"
+          onClick={() => setPreviewModalPlan(null)}
+        >
+          <div 
+            className="relative w-full max-w-5xl max-h-[92vh] bg-white rounded-2xl shadow-2xl border border-pink-200 overflow-hidden flex flex-col"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="flex items-center justify-between px-5 sm:px-6 py-4 border-b border-pink-100 bg-slate-900 text-white">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-pink-600 flex items-center justify-center text-white font-bold">
+                  <Ruler className="w-5 h-5" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="px-2 py-0.5 rounded bg-pink-500/20 text-pink-300 text-[10px] font-mono uppercase font-bold border border-pink-500/30">
+                      {previewModalPlan.configuration} • {previewModalPlan.typeLabel}
+                    </span>
+                    <span className="text-xs text-slate-300 font-mono">
+                      {previewModalPlan.dimensions} • {previewModalPlan.builtUpAreaSqFt} Sq Ft
+                    </span>
+                  </div>
+                  <h3 className="text-base sm:text-lg font-bold font-montserrat text-white mt-0.5">
+                    {previewModalPlan.title}
+                  </h3>
+                </div>
+              </div>
+
+              <button
+                onClick={() => setPreviewModalPlan(null)}
+                className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
+                aria-label="Close Blueprint Modal"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="overflow-y-auto p-4 sm:p-6 space-y-6 flex-1">
+              
+              {/* High-Resolution Blueprint Image Container */}
+              <div className="relative rounded-xl overflow-hidden border-2 border-slate-900 bg-slate-950 shadow-inner group">
+                <img
+                  src={previewModalPlan.blueprintImage}
+                  alt={`${previewModalPlan.title} High-resolution AutoCAD 2D blueprint`}
+                  className="w-full max-h-[55vh] object-contain mx-auto bg-slate-950"
+                />
+                
+                {/* Overlay Badges */}
+                <div className="absolute top-3 left-3 px-3 py-1 rounded bg-black/75 backdrop-blur-xs text-white text-xs font-mono font-bold border border-white/20 flex items-center gap-1.5">
+                  <Compass className="w-3.5 h-3.5 text-pink-400" />
+                  ORIENTATION: {previewModalPlan.orientation.toUpperCase()}
+                </div>
+
+                <div className="absolute top-3 right-3 px-3 py-1 rounded bg-pink-600 text-white text-xs font-bold font-montserrat uppercase shadow-md">
+                  Vastu Aligned (16 Pada Grid)
+                </div>
+
+                <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-white text-xs bg-slate-900/80 backdrop-blur-xs p-2.5 rounded-lg border border-white/10">
+                  <span className="font-mono text-[11px] text-pink-200">
+                    Drafted by Saurabh Kumar • Pinaka Structure Studio Ranchi
+                  </span>
+                  <span className="text-[11px] text-slate-300 font-semibold hidden sm:inline">
+                    AutoCAD DWG &amp; Sanctioned PDF Ready
+                  </span>
+                </div>
+              </div>
+
+              {/* Room Schedule & Vastu Coordinates Matrix */}
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className="text-sm font-bold uppercase tracking-wider text-slate-900 font-montserrat flex items-center gap-2">
+                    <Layers className="w-4 h-4 text-pink-600" />
+                    Room Dimension Schedule &amp; Vastu Zones
+                  </h4>
+                  <span className="text-xs text-pink-600 font-mono font-semibold">
+                    100% Bylaw Compliant
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+                  {previewModalPlan.roomDetails.map((room, idx) => (
+                    <div 
+                      key={idx}
+                      className="p-3 rounded-xl bg-pink-50/40 border border-pink-100 flex flex-col justify-between text-xs"
+                    >
+                      <div className="flex items-center justify-between font-bold text-slate-900 mb-1">
+                        <span className="flex items-center gap-1.5 text-slate-800">
+                          <span className="w-2 h-2 rounded-full bg-pink-600 shrink-0" />
+                          {room.room}
+                        </span>
+                        <span className="px-2 py-0.5 rounded bg-white border border-pink-200 text-[10px] font-mono text-pink-700 font-bold">
+                          {room.direction} ({room.zone})
+                        </span>
+                      </div>
+                      <div className="text-slate-600 font-mono text-[11px] mb-1">
+                        Dimensions: <strong className="text-slate-900">{room.dimensions}</strong>
+                      </div>
+                      <div className="text-[11px] text-slate-500 italic">
+                        {room.vastuReason}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Vastu Highlights Grid */}
+              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                <div className="text-xs font-bold uppercase tracking-wider text-slate-800 font-montserrat mb-2 flex items-center gap-1.5">
+                  <ShieldCheck className="w-4 h-4 text-emerald-600" /> Key Engineering &amp; Vastu Highlights:
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {previewModalPlan.vastuHighlights.map((h, i) => (
+                    <div key={i} className="flex items-center gap-2 text-xs text-slate-700">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-pink-600 shrink-0" />
+                      <span>{h}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+            </div>
+
+            {/* Modal Footer Actions */}
+            <div className="p-4 sm:p-5 border-t border-pink-100 bg-pink-50/40 flex flex-col sm:flex-row items-center justify-between gap-3">
+              <div className="text-xs text-slate-600 text-center sm:text-left">
+                Want this exact layout adapted to your plot dimensions in Ranchi?
+              </div>
+
+              <div className="flex items-center gap-2.5 w-full sm:w-auto">
+                <a
+                  href={`https://wa.me/${BRAND_CONFIG.whatsappNumber}?text=${encodeURIComponent(`Hello Saurabh Kumar, I am interested in the 2D floor plan: ${previewModalPlan.title} (${previewModalPlan.dimensions}). Can we adapt it to my plot?`)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 sm:flex-initial px-4 py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold font-montserrat flex items-center justify-center gap-1.5 transition-colors shadow-xs"
+                >
+                  <MessageSquare className="w-4 h-4" />
+                  <span>Chat on WhatsApp</span>
+                </a>
+
+                <button
+                  onClick={() => {
+                    const title = previewModalPlan.title;
+                    setPreviewModalPlan(null);
+                    onSelectPlan(title);
+                  }}
+                  className="flex-1 sm:flex-initial px-5 py-2.5 rounded-lg bg-gradient-to-r from-pink-600 to-rose-500 hover:from-pink-700 hover:to-rose-600 text-white text-xs font-bold uppercase tracking-wider font-montserrat flex items-center justify-center gap-1.5 transition-all shadow-md cursor-pointer"
+                >
+                  <span>Book Consultation</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      )}
+
     </section>
   );
 };

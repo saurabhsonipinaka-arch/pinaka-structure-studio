@@ -58,8 +58,13 @@ export const AboutUs: React.FC = () => {
               <div className="absolute top-0 right-0 w-32 h-32 bg-pink-100/60 rounded-bl-full pointer-events-none" />
               
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-16 h-16 rounded-xl bg-gradient-to-tr from-pink-50 to-pink-100 border border-pink-300 flex items-center justify-center text-pink-600 font-montserrat font-bold text-2xl shadow-inner">
-                  SK
+                <div className="w-16 h-16 rounded-xl bg-white border border-pink-300 overflow-hidden flex items-center justify-center p-1 shadow-sm shrink-0">
+                  <img 
+                    src={BRAND_CONFIG.logoUrl} 
+                    alt="Pinaka Structure Studio" 
+                    className="w-full h-full object-contain rounded-lg"
+                    referrerPolicy="no-referrer"
+                  />
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-slate-900 font-montserrat">

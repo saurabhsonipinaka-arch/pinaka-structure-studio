@@ -32,7 +32,12 @@ export const Hero: React.FC<HeroProps> = ({ onConsultationClick, onViewWorkClick
             
             {/* Architectural Studio Badge */}
             <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-pink-50 border border-pink-200 text-slate-800 text-xs sm:text-sm font-medium shadow-sm">
-              <span className="w-2 h-2 rounded-full bg-pink-500 animate-pulse" />
+              <img 
+                src={BRAND_CONFIG.logoUrl} 
+                alt="Pinaka Structure Studio" 
+                className="w-5 h-5 object-contain rounded-full border border-pink-300"
+                referrerPolicy="no-referrer"
+              />
               <span className="text-pink-600 font-bold tracking-wide">Pinaka Structure Studio</span>
               <span className="text-pink-300">|</span>
               <span className="text-slate-600 font-medium">Ranchi, Jharkhand</span>

@@ -40,8 +40,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onConsultationClick }) => {
           
           {/* Brand Logo */}
           <a href="#" className="flex items-center gap-3 group" id="brand-logo-link">
-            <div className="w-11 h-11 rounded-lg bg-pink-50 border border-pink-200 flex items-center justify-center text-pink-600 group-hover:border-pink-500 transition-all shadow-sm group-hover:shadow-[0_0_16px_rgba(219,39,119,0.25)]">
-              <Compass className="w-6 h-6 stroke-[1.8] group-hover:rotate-45 transition-transform duration-500" />
+            <div className="w-12 h-12 rounded-xl bg-white border border-pink-200 overflow-hidden flex items-center justify-center p-0.5 shadow-sm group-hover:border-pink-500 group-hover:shadow-[0_0_16px_rgba(219,39,119,0.2)] transition-all">
+              <img
+                src={BRAND_CONFIG.logoUrl}
+                alt="Pinaka Structure Studio Logo"
+                className="w-full h-full object-contain rounded-lg group-hover:scale-105 transition-transform duration-300"
+                referrerPolicy="no-referrer"
+              />
             </div>
             <div className="flex flex-col">
               <span className="font-montserrat font-bold tracking-wider text-lg sm:text-xl text-slate-900 uppercase leading-tight group-hover:text-pink-600 transition-colors">

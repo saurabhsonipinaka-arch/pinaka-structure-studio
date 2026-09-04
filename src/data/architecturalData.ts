@@ -2,6 +2,7 @@ import { ServiceItem, PortfolioProject, WhyChoosePillar } from '../types';
 
 export const BRAND_CONFIG = {
   companyName: 'Pinaka Structure Studio',
+  logoUrl: '/pinaka-logo.jpg',
   ownerName: 'Saurabh Kumar',
   role: 'Principal Architectural Designer & Structural Lead',
   address: 'Ranchi, Jharkhand, India',

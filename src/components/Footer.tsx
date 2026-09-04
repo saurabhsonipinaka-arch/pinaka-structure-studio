@@ -47,8 +47,13 @@ export const Footer: React.FC = () => {
           {/* Column 1: Brand & Founder Info */}
           <div className="lg:col-span-4 space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-pink-100 border border-pink-300 flex items-center justify-center text-pink-600 shadow-sm">
-                <Compass className="w-5 h-5" />
+              <div className="w-12 h-12 rounded-xl bg-white border border-pink-300 overflow-hidden flex items-center justify-center p-0.5 shadow-sm">
+                <img
+                  src={BRAND_CONFIG.logoUrl}
+                  alt="Pinaka Structure Studio Logo"
+                  className="w-full h-full object-contain rounded-lg"
+                  referrerPolicy="no-referrer"
+                />
               </div>
               <div>
                 <span className="font-montserrat font-bold text-lg uppercase tracking-wider text-slate-900 block leading-tight">
