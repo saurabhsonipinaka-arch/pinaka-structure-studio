@@ -1,0 +1,6 @@
+{
+  "name": "Pinaka Structure Studio",
+  "description": "Premier architectural studio in Ranchi specializing in 2D floor plans for homes and apartments as per Vastu, 3D duplex elevations, and luxury interior and exterior design by Saurabh Kumar.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
